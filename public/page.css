@@ -287,6 +287,12 @@ margin-top: 2em;
     border-radius: 5px;
 }
 
+.instruction-box {
+    background-color: turquoise;
+    opacity: 70%;
+    
+}
+
 /* .color1{
 fill: red;
 } */
