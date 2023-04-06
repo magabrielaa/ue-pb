@@ -102,7 +102,7 @@ function pbUtilityBars(data) {
   var div,
     svg,
     chartWrapper,
-    instructionBox,
+    //instructionBox,
     xAxis,
     // useData,
     xScale,
@@ -153,14 +153,7 @@ function pbUtilityBars(data) {
       .attr('id', 'elicitData') 
       .attr('transform', `translate(${margin.left}, ${margin.top})`)
       .call(drag);
-     instructionBox = svg
-      .append('g')
-      .attr('id', 'instruction-box')
-      .attr('transform', `translate(${svgWidth-300}, ${margin.top})`)
 
-
-    // tooltip/warning init //////IS THIS BEING OUND TO THE RIGHT SPOT 
-    tooltip = d3.select('#utility-elicitation').append('div').attr('class', 'tooltip').style('opacity', 0);
 
     // if we need to reshape the input data, do it here and store in a global variable
     setXDomain();
@@ -204,32 +197,69 @@ function pbUtilityBars(data) {
       .on('mouseover', onMouse) //This might be the issue with grabbbing cursor style
       .on('mouseout', offMouse);
 
+  // tooltip/warning init 
+  tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('pointer-events', 'none').style('opacity', 0);
 
-    // let instructions = instructionBox
-    //   .attr('id', 'instructionBox')
-      // .selectAll('rect')
-      // .data(data)
-      // .join('rect')
-      // .attr('height', svgHeight/3)
-      // .width('width', svgWidth/4)
+// tooltip/warning init 
+// let tooltip = d3.select('body').append('div')
+// .attr('class', 'tooltip')
+// .style('pointer-events', 'none')
+// .style('opacity', 0);
+// tooltip
 
 
-//Trying to work on xAxis mouseover ////////////////////////////////
-    xAxis.selectAll('xAxis.tick')
-      .data(data)
-      .append("text")
-      .on('mouseover', popUpDesc());
-      
-      function popUpDesc(event, d) {
-        d3.select(this)
-        console.log(d3.select(xAxis.tick))
-        // d3.select(this).attr('stroke', 'black')
-        // .data(data)
-        // .text((d) => d.Description)
-        // console.log("is this working") //NOPE
-      }
-    
-      
+  //Instructions box
+  let instructionBox = svg.append('g').attr('transform', `translate(${svgWidth-300}, ${margin.top})`)
+    .attr('id', 'instruction-box');
+  instructionBox
+    .selectAll('rect')
+    .data(data)
+    .join('rect')
+    .attr('fill', 'red')
+    .attr('opacity', 0)
+    .attr('x', 50)
+    .attr('y', 0)
+    .attr('height', svgHeight/3)
+    .attr('width', svgWidth/4);
+    //WORK ON THIS NEXT /////////////////
+    //Write a function lsitening to next buttons and changes
+    //On every change cycle the text in the instruciton box
+    //click to close feature (and open back up)
+    //To do this just add more secret click points or 
+    //maybe can include html button within
+
+  //xAxis Mouseover with Andrew demo + help
+  let infoTooltip = d3.select('body')
+      .append('div')
+      .style('position', 'absolute')
+      .style('pointer-events', 'none');
+
+  let hoverTarget = svg.append('g').attr('transform',
+      `translate(${margin.left}, ${margin.top})`);
+  hoverTarget
+    .selectAll('rect')
+    .data(data)
+    .join('rect')
+    .attr('fill', 'red')
+    .attr('opacity', 0)
+    .attr('x', (d) => xScale(d.Thing))
+    .attr('y', yScale.range().at(0))
+    .attr('width', xScale.bandwidth())
+    .attr('height', 20)
+    .on('mousemove', function (e, dataValue, d) { //TRANSFER ALL OF THIS TO A CSS THINGGY (Could Also use for instruction Boxes)
+      infoTooltip.style('display', 'block');
+      infoTooltip.style('background-color', 'lightgrey')
+      infoTooltip.style('top', `${e.pageY}px`);
+      infoTooltip.style('max-width', '310px')
+      infoTooltip.style('padding', '5px')
+      infoTooltip.style("border-radius", "5px")
+      infoTooltip.style('border-style', 'solid')
+      infoTooltip.style('left', `${e.pageX+10}px`);
+      infoTooltip.text(`${dataValue.Description}`);
+    })
+    .on('mouseout', () => {
+      infoTooltip.style('display', 'none');
+    });
       
 
     //Establishing current position for the posObj (requires domain and scales)
@@ -387,7 +417,7 @@ function pbUtilityBars(data) {
       yVal = clamp(0, yScale.domain()[1], Math.floor(yScale.invert(mousePos[1]))); //Finds scaled Y value
     console.log(event, d) 
     //Halting Funciton and Checks
-    if (getRemaining() > 0 || (getRemaining() <= 0 && yVal < data[xBand].elicit)) {
+    if (getRemaining() > 0 || (getRemaining() <= 0 && yVal < data[xBand].elicit)) { //Check here for grainularrity changes to solving
       data.find((d) => d.Thing == xVal).elicit = yVal;
 
       drag.on('drag', dragging);
@@ -400,17 +430,14 @@ function pbUtilityBars(data) {
           .style('opacity', 0.9);
       
       tooltip
-        .html('You have run out of money') //position of warning tooltip, can/will move
+        .text('You have run out of money') //Do we want this to be .text or .attr('text', ...)
         .data(data)
-        //.attr('transform', `translate(${length/2}, ${margin.top})`);
-        // .style("left", event.pageX + "px")
-        // .style("top", event.pageY + "px")
-        .style('left', width / 2 + 'px')
-        .style('top', svgHeight + 10 + 'px');
+        .attr('transform', `translate(${length/2}, ${margin.top})`)//position of warning tooltip, can/will move
+        .style("top", event.pageY + "px")
+        //.style('left', width / 2 + 'px')
+        //.style('top', svgHeight + 10 + 'px');
     } //maybe need an else here
-    /*
-        use a transition
-    */
+  
     chart.render();
   }
 
