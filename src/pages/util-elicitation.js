@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import {getState, setState} from '../state';
+import {getState, setState, switchPage} from '../state';
 
 async function init() {
   // data file setup // THIS IS A PLACEHOLDER
@@ -38,8 +38,13 @@ async function init() {
   document.querySelector('#allocate').addEventListener('click', switchDragMode);
   // this IS WHERE I AM TESTING THE INSTRUCTION CHANGE
 
-  // document.querySelector('#next').addEventListener('click', getState());//document.location='default.asp'); //setState()); //State update Here,  
-  //
+  //Page state Change and change page with next button
+  //Once the state for Page changes, I can update a link or instead ensure that only some functions run
+  setState("Page", "util") //initial state before change
+  //This makes the pages traversable
+  document.querySelector('#next').addEventListener('click', switchPage);
+  
+
 
 
   function switchDragMode(e) {
@@ -49,13 +54,13 @@ async function init() {
     pbUtilBars.dragMode(mode);
   }
 
-//Testing location for the instruction shift on click MAY NEED TO MOVE THIS TO CHART RENDER
-let textCount = 0,
-  text = "This is the begining message of chart instructions that should change over time";
+// //Testing location for the instruction shift on click MAY NEED TO MOVE THIS TO CHART RENDER
+// let textCount = 0,
+//   text = "This is the begining message of chart instructions that should change over time";
 
-function increastTextCount(count) {
-  return count++
-}
+// function increastTextCount(count) {
+//   return count++
+// }
 
 // function nextInstructionText(textCount) { 
 //   textCount = textCount++
@@ -64,13 +69,13 @@ function increastTextCount(count) {
 //   pbUtilBars.instructionText(textCount);
 // };
 
-function switchInstText(num) {
-  if (num == 1) {
-    text = "This is the First test (RANK)"
-  } else if (num == 2) {
-    text = "This is the Second Test (ALLOCATE)"  
-  };
-}
+// function switchInstText(num) {
+//   if (num == 1) {
+//     text = "This is the First test (RANK)"
+//   } else if (num == 2) {
+//     text = "This is the Second Test (ALLOCATE)"  
+//   };
+// }
 
 
 //
@@ -569,8 +574,8 @@ const content =
         <span id ="separator">|</span> 
         <button name = "mode" id="allocate" class="mode" value = "allocate">Allocate</button>
     </p>
-
-    <input class="button" id = "next" onclick= "window.location.href='/#util'" type="submit" value="Next" />
+<!-- onclick= "window.location.href='/#feedback'" --> 
+    <input class="button" id = "next"  type="submit" value="Next" />
     <input class="button" type="submit" value="Submit" />
 
     <p>Thank you for choosing 4 projects to receive menu money in our Ward!</p>

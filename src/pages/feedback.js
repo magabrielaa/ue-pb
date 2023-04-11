@@ -1,9 +1,15 @@
 import * as d3 from 'd3';
 import barChart from '../charts/bar-chart';
 import map from '../charts/map';
-import {getState, setState} from '../state';
+import {getState, setState, switchPage} from '../state';
+
+
 
 async function initialize() {
+  //This makes the pages traversable
+  document.querySelector('#next').addEventListener('click', switchPage);
+
+
   let data = [];
 
   initialWardData((newData) => {
@@ -275,6 +281,8 @@ const content =
         </div>
     </div>
     <div id="map"></div>
+
+    <input class="button" id = "next"  type="submit" value="Next" />
 `;
 
 export default {content, script: initialize};

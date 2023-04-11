@@ -1,9 +1,16 @@
-import {getState, setState} from '../state';
+import {getState, setState, switchPage} from '../state';
 
 async function script() {
   console.log('hi alex!');
   setState('startTime', `${new Date()}`);
+
+ //This makes the pages traversable
+setState("Page", "intro")
+document.querySelector('#next').addEventListener('click', switchPage);
 }
+
+//testing this out
+
 
 const content =
   /* html */
@@ -33,6 +40,8 @@ const content =
     </p>
 
     <h2 id="voting">Voting Period: October 20 - November 30, 2022</h2>
+
+    <input class="button" id = "next"  type="submit" value="Next" />
 </div>
 `;
 
