@@ -38,7 +38,7 @@ async function init() {
   document.querySelector('#allocate').addEventListener('click', switchDragMode);
   // this IS WHERE I AM TESTING THE INSTRUCTION CHANGE
 
-  document.querySelector('#next').addEventListener('click', nextInstructionText);
+  // document.querySelector('#next').addEventListener('click', getState());//document.location='default.asp'); //setState()); //State update Here,  
   //
 
 
@@ -57,12 +57,12 @@ function increastTextCount(count) {
   return count++
 }
 
-function nextInstructionText(textCount) { 
-  textCount = textCount++
-  // next instructionText for chart component
+// function nextInstructionText(textCount) { 
+//   textCount = textCount++
+//   // next instructionText for chart component
 
-  pbUtilBars.instructionText(textCount);
-};
+//   pbUtilBars.instructionText(textCount);
+// };
 
 function switchInstText(num) {
   if (num == 1) {
@@ -117,6 +117,7 @@ function pbUtilityBars(data) {
     xVal,
     yVal,
     textCount = 0,
+    testingVal,
     instructionText = "default";
   // bars;
 
@@ -299,7 +300,7 @@ function pbUtilityBars(data) {
       .text((d) => `Budget Remaining: $${d}`)
       .style('font-size', '1.5em');
 
-    // console.log(nextInstructionText())
+    //console.log(nextInstructionText())
     // d3.select('#instruction-box')
     //   .data(nextInstructionText())//Needs to be updating for # of next clicks can create helper functions for that
     //   .join('text')
@@ -512,10 +513,20 @@ function pbUtilityBars(data) {
     if (!arguments.length) return instructionText;
     text = _;
 
-
-
     return chart;
   };
+
+// console.log("This is the pathname", window.location.hash)
+
+// let currentPageLocation = window.location.hash
+
+// let testingVal = "#intro"
+// if (currentPageLocation == "#intro") {
+//     testingVal = "#util"
+// } else if (currentPageLocation == "#util") {
+//   testingVal = "#feedback"
+// }
+
 
   function switchInstText(num) {
     if (num == 1) {
@@ -552,14 +563,14 @@ const content =
     </div> <div id = "utility-elicitation"> </div>
     
 
-    <!-- may need to bind the switchDragMode event listener here -->
+    <!-- may need to bind the switchDragMode event listener here -->   
     <p id="chart-option">
         <button name = "mode"  id="rank" class="mode" value = "rank">Rank</button>
         <span id ="separator">|</span> 
         <button name = "mode" id="allocate" class="mode" value = "allocate">Allocate</button>
     </p>
-    
-    <input class="button" id = "next" type="submit" value="Next" />
+
+    <input class="button" id = "next" onclick= "window.location.href='/#util'" type="submit" value="Next" />
     <input class="button" type="submit" value="Submit" />
 
     <p>Thank you for choosing 4 projects to receive menu money in our Ward!</p>
