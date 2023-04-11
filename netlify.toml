@@ -1,0 +1,6 @@
+[dev]
+    targetPort = 8080
+    functionsPort = 8081
+    envFiles=[".env.development"]
+    framework = "svelte"
+    

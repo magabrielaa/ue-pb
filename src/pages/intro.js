@@ -1,7 +1,8 @@
 import {getState, setState} from '../state';
 
 async function script() {
-  console.log('hi alex');
+  console.log('hi alex!');
+  setState('startTime', `${new Date()}`);
 }
 
 const content =

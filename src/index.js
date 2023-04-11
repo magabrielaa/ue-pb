@@ -1,12 +1,12 @@
 import * as d3 from 'd3';
-// import './example.css';
 
 // pages
 import intro from './pages/intro';
 import util from './pages/util-elicitation';
 import feedback from './pages/feedback';
+import submit from './pages/submit';
 
-const pages = {intro, util, feedback};
+const pages = {intro, util, feedback, submit};
 
 function attachDebugView() {
   const content = Object.keys(pages)
