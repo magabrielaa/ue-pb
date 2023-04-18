@@ -45,7 +45,10 @@ async function init() {
   document.querySelector('#next').addEventListener('click', switchPage);
   
 
-
+  function DataState() {
+    setState("Allocate_data", data.elicit)
+    setState("Rank_data", data.Thing)
+  }
 
   function switchDragMode(e) {
     // select the input switch and get current value (that was just clicked)
@@ -298,7 +301,7 @@ function pbUtilityBars(data) {
       .attr('width', xScale.bandwidth());
 
     // Updates budget Remaining
-    console.log(getRemaining())
+    console.log(getRemaining()) //1393
     d3.select('#budget')
       .data(getRemaining())
       .join('text')

@@ -35,15 +35,17 @@ export async function materializeState() {
   return Object.fromEntries(zip(keys, result));
 }
 
-export function switchPage() {
+export async function switchPage() {
   getState("Page").then(function(result) { 
     if (result == "intro") {
        setState("util")
         return window.location.hash = '#util'
     } else if(result == "util") {
       setState("Page", "feedback") 
+      //set state for data and such so It can be called later
       return window.location.hash = '#feedback'
     } else if (result =="feedback") {
+      //will have to get state with data here
       setState("Page", "submit")
       return window.location.hash = '#submit'
     } else if (result == "submit") {
@@ -53,3 +55,4 @@ export function switchPage() {
   }) 
  
   };
+  //const results = await getState("Page") ^^ Do this above!!!!!
