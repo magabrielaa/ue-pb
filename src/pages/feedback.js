@@ -10,6 +10,14 @@ async function initialize() {
   document.querySelector('#next').addEventListener('click', switchPage);
 
 
+  //This is how you access the elicited data (can change the varible name)
+  //Currently it is just in the same data object as it is collected in. 
+  //The important values here are elicited.Thing (the project) 
+  // and elicited.elicit, The values that were actually elicited
+  let elicited = await getState("data")
+
+
+
   let data = [];
 
   initialWardData((newData) => {

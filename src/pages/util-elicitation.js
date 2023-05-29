@@ -2,7 +2,28 @@ import * as d3 from 'd3';
 import {getState, setState, switchPage} from '../state';
 
 async function init() {
-  // data file setup // THIS IS A PLACEHOLDER
+
+  //Page state Changes and switch page with next button
+  //Once the state for Page changes, I can update a link or instead ensure that only some functions run
+  setState("Page", "util") //initial state before change
+  //This makes the pages traversable
+  document.querySelector('#next').addEventListener('click', Data_State);//switchPage);
+
+  function Data_State() {
+    setState("data", data) //This is to simply pass the data object
+    switchPage(); //Function from state.js
+  }
+  
+  //This is testing out seting the state for the instruction box
+  setState("Instructions", 'This is a pretty silly test but hopefully it will work')
+
+  //Temporary switch and different drag
+  // make this a callback for toggle input
+  document.querySelector('#rank').addEventListener('click', switchDragMode);
+  document.querySelector('#allocate').addEventListener('click', switchDragMode);  
+
+
+  //This is the input data, currently it is hardcoded with the options available
   const keys = ["Street Resurfacing", "Bike Lanes", "School Improvments", "Picnic Tables", "Street Lights", "Food Pantry", "Street Murals", "Curb Cuts"],
     values = ["Street resurfacing is determined by a percentage of the budget. 100% of the budget allows for 16 streets to be resurfaced, while 50% covers resurfacing for 9 streets.",
     "The bike lanes would run with traffic on Maplewood from Montrose to Wilson; with traffic on Campbell from Wilson to Montrose. They would connect with the future Leland Greenway on Campbell. The bike lanes would not impact parking.",
@@ -15,7 +36,7 @@ async function init() {
 
   ];
 
-  //dummy data
+  //constructing the data object
   let data = keys.map((keys, index) => {
     return {
       Thing: keys,
@@ -25,64 +46,23 @@ async function init() {
   });
   console.log(data);
 
+
+
+  //Starting to 
   // create instance of chart component
   let pbUtilBars = pbUtilityBars(data);
 
-  // set up chart component, and call
-  pbUtilBars.dragMode('allocate'); // initialize in rank mode ////CHANGE THIS TO RANK!!!!!!!!!!!
+  // set up chart component, and call ///////LOOK HERE AND CHANGE rank and allocate in the dragMode call. This will ensure change in functionality. 
+  pbUtilBars.dragMode('rank'); // initialize in rank mode ////CHANGE THIS TO RANK!!!!!!!!!!!
   d3.select('#utility-elicitation').datum(data).call(pbUtilBars);
 
-  //Temporary switch and different drag
-  // make this a callback for toggle input
-  document.querySelector('#rank').addEventListener('click', switchDragMode);
-  document.querySelector('#allocate').addEventListener('click', switchDragMode);
-  // this IS WHERE I AM TESTING THE INSTRUCTION CHANGE
 
-  //Page state Change and change page with next button
-  //Once the state for Page changes, I can update a link or instead ensure that only some functions run
-  setState("Page", "util") //initial state before change
-  //This makes the pages traversable
-  document.querySelector('#next').addEventListener('click', switchPage);
-  
-
-  function DataState() {
-    setState("Allocate_data", data.elicit)
-    setState("Rank_data", data.Thing)
-  }
-
-  function switchDragMode(e) {
+  function switchDragMode(e) { // This doesn't work as well as it should it takes multiple clicks and is weird.
     // select the input switch and get current value (that was just clicked)
     let mode = e.value; // this should come from input
     // set dragMode for chart component
     pbUtilBars.dragMode(mode);
   }
-
-// //Testing location for the instruction shift on click MAY NEED TO MOVE THIS TO CHART RENDER
-// let textCount = 0,
-//   text = "This is the begining message of chart instructions that should change over time";
-
-// function increastTextCount(count) {
-//   return count++
-// }
-
-// function nextInstructionText(textCount) { 
-//   textCount = textCount++
-//   // next instructionText for chart component
-
-//   pbUtilBars.instructionText(textCount);
-// };
-
-// function switchInstText(num) {
-//   if (num == 1) {
-//     text = "This is the First test (RANK)"
-//   } else if (num == 2) {
-//     text = "This is the Second Test (ALLOCATE)"  
-//   };
-// }
-
-
-//
-
 
   //updating budget remaining at the top
   // do we need a way of triggering this inside of our chart component? maybe it should be a helper funciton inside the component
@@ -112,7 +92,6 @@ function pbUtilityBars(data) {
     chartWrapper,
     //instructionBox,
     xAxis,
-    // useData,
     xScale,
     yScale,
     band,
@@ -142,13 +121,13 @@ function pbUtilityBars(data) {
     chartSelection = selection;
     selection.each((el, i) => init(el));
   }
+  
 
   // initialize the chart
   // this is the first rendering when the component mounts
   function init(selection, that) {
     // assign selection and data to global variable
     div = chartSelection;
-    let useData = data;
 
     // D3 code to render the chart for the first time
     // this should include any legends or fiducial markings that will
@@ -164,8 +143,10 @@ function pbUtilityBars(data) {
       .call(drag);
 
 
+
+
     // if we need to reshape the input data, do it here and store in a global variable
-    setXDomain();
+    setXDomain(); // can we move this 
     console.log(xDomain);
 
     // set up scales and axes once data is ready
@@ -177,12 +158,7 @@ function pbUtilityBars(data) {
       .domain([-20000, 1000000])
       .range([height, 0]);
 
-    // Append G Element
-    // USE BANDWIDTH WIDTH
-
-  
-
-    // render bars and axes for first time  ////////////G element stuff here /////////////////////////////
+    // render bars and axes for first time  
     let bars = chartWrapper
       .selectAll('rect')
       .data(data)
@@ -206,38 +182,67 @@ function pbUtilityBars(data) {
       .on('mouseover', onMouse) //This might be the issue with grabbbing cursor style
       .on('mouseout', offMouse);
 
-  // tooltip/warning init 
+
+
+  //Next is a code for various tooltips
+  //This tooltip is for the over budget warning (Currently it is not displaying properly when it had before)
+  //At the moment The text will display at teh bottom of the page when the condition is met, but the actual box no longer displays
   tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('pointer-events', 'none').style('opacity', 0);
+  
+  //This tooltip is for the instruction box
+  let instructionTooltip = d3.select('body')//'body')
+    .append('div')
+    .style('position', 'absolute')
+    .style('pointer-events', 'none')
+  //instructionTooltip.style('display', 'none')
+    .style('display', 'block')
+    .text("?");
 
-// tooltip/warning init 
-// let tooltip = d3.select('body').append('div')
-// .attr('class', 'tooltip')
-// .style('pointer-events', 'none')
-// .style('opacity', 0);
-// tooltip
-
-
-  //Instructions box
-  let instructionBox = svg.append('g').attr('transform', `translate(${svgWidth-300}, ${margin.top})`)
+  //Instructions box (This is the display box for the elicitation instructions) ****CURRENTLY THE PROMISE IS NOT EXECUTING. MAYBE THIS NEEDS TO BE MORE HARD CODED?***
+  let instructionBox = svg.append('g').attr('transform', `translate(${svgWidth-margin.right}, ${margin.top})`)
     .attr('id', 'instruction-box');
   instructionBox
     .selectAll('rect')
     .data(data)
     .join('rect')
     .attr('fill', 'red')
-    .attr('opacity', 0)
-    .attr('x', 50)
-    .attr('y', 0)
-    .attr('height', svgHeight/3)
-    .attr('width', svgWidth/4);
-    //WORK ON THIS NEXT /////////////////
+    .attr('opacity', 0.1)
+    .text("?")
+    .attr('x', (d) => xScale(850))
+    .attr('y', -40)
+    .attr('height', 40)
+    .attr('width', 60)
+    .on("mousemove", function (e, dataValue, d) { //a lot of this probably can be transfred to css file
+      instructionTooltip.style('display', 'block')
+      instructionTooltip.style('background-color', 'lightgrey')
+      instructionTooltip.style('top', `${svgHeight-100}px`)
+      instructionTooltip.style('max-width', '260px')
+      instructionTooltip.style('padding', '5px')
+      instructionTooltip.style("border-radius", "5px")
+      instructionTooltip.style('border-style', 'solid')
+      instructionTooltip.style('left', `${50}%`);
+      instructionTooltip.text(
+        (async () => { //WHY ISNT THIS WORKING
+          const ins = await getState("Instructions")
+          console.log(ins)
+          return ins
+        }));
+    }).on('mouseout', () => { //Need to visualy adjust this all
+      //instructionTooltip.style('display', 'none')
+      instructionTooltip.style('display', 'none')
+      instructionTooltip.text("?");
+    });
+
+
+    //One of the things I was planning to work on next VVVV
     //Write a function lsitening to next buttons and changes
-    //On every change cycle the text in the instruciton box
+    //On every change cycle the text in the instruciton box (Was hoping 
+    //to use promise although currently nothing is displaying)
     //click to close feature (and open back up)
     //To do this just add more secret click points or 
     //maybe can include html button within
 
-  //xAxis Mouseover with Andrew demo + help
+  //xAxis Mouseover with Andrew demo + help (This is for the informational tooltip on axis scroll-over)
   let infoTooltip = d3.select('body')
       .append('div')
       .style('position', 'absolute')
@@ -258,7 +263,7 @@ function pbUtilityBars(data) {
     .on('mousemove', function (e, dataValue, d) { //TRANSFER ALL OF THIS TO A CSS THINGGY (Could Also use for instruction Boxes)
       infoTooltip.style('display', 'block');
       infoTooltip.style('background-color', 'lightgrey')
-      infoTooltip.style('top', `${e.pageY}px`);
+      infoTooltip.style('top', `${e.pageY}px`)
       infoTooltip.style('max-width', '310px')
       infoTooltip.style('padding', '5px')
       infoTooltip.style("border-radius", "5px")
@@ -269,7 +274,6 @@ function pbUtilityBars(data) {
     .on('mouseout', () => {
       infoTooltip.style('display', 'none');
     });
-      
 
     //Establishing current position for the posObj (requires domain and scales)
     currentPos(); // does this need to be in chart.render?
@@ -306,14 +310,11 @@ function pbUtilityBars(data) {
       .data(getRemaining())
       .join('text')
       .text((d) => `Budget Remaining: $${d}`)
-      .style('font-size', '1.5em');
+      .style('font-size', '1.5em')
+        .append("div")
+        .attr("class", "testing")
 
-    //console.log(nextInstructionText())
-    // d3.select('#instruction-box')
-    //   .data(nextInstructionText())//Needs to be updating for # of next clicks can create helper functions for that
-    //   .join('text')
-    //   .text("Instructions:" + d) //For now...
-    //   .style('font-size', '1em');
+ /////////////////////////////////////////////////////////////
 
 
     // may need to bind some event listeners to DOM elements here
@@ -333,6 +334,8 @@ function pbUtilityBars(data) {
     xScale = d3.scaleBand().domain(xDomain).range([0, width]).padding(0.2);
   }
 
+
+  //The following two functions really help with ranking functionality (Thanks Alex)
   function currentPos() {
     // iterate through xDomain computing bin midpoints
     for (let i = 0; i < xDomain.length; i++) {
@@ -356,6 +359,7 @@ function pbUtilityBars(data) {
     posObj['center'][item] = pos;
   }
 
+  //These switch between the Drag events for Allocation and Ranking
   function setDragEvents() {
     if (dragMode == 'allocate') {
       drag.on('start', dragStart)
@@ -369,50 +373,11 @@ function pbUtilityBars(data) {
     }
   }
 
+
+
+  //THe following is the functionality for Allocation Drag events
   // Drag Functionality // adapted from https://observablehq.com/@d3/circle-dragging-i and https://observablehq.com/@duitel/you-draw-it-bar-chart
-  function clamp(a, b, c) {
-    return Math.max(a, Math.min(b, c));
-  } //This clamp function is used to find the elicited value and assure it is in between bounds
 
-  //MAY WANT TO MOVE:::::
-  //THIS IS FOR THE INSTRUCTION BOX
-
-  function nextInstructionText() {
-    textCount++ ; 
-    let text = "This is the begining message of chart instructions that should change over time"
-    
-    // set instructionText for chart component
-    if (textCount == 1) {
-      text = "This is the First test"
-    } else if (textCount == 2) {
-      text = "This is the Second Test"
-    };
-   console.log(text)
-   return text
-  };
-
-
-
-  // //Helpers for Budget remaining/ Halting
-  function sum(array) {
-    const arr = array;
-    const total = array.reduce((a, b) => a + b, 0);
-    return total;
-  }
-
-  function elicitArray() {
-    //grabs the elicit array value
-    var arr = [];
-    for (let i in [0, 1, 2, 3]) {
-      arr.push(data[i].elicit);
-    }
-    return arr;
-  }
-
-  function getRemaining() {
-    let remain = [yScale.domain()[1] - sum(elicitArray())];
-    return remain;
-  }
 
   function dragStart(event, d) {
     /////CHANGE MOUSE CURSOR in these functions
@@ -423,8 +388,8 @@ function pbUtilityBars(data) {
     let mousePos = d3.pointer(event, this),
       xBand = clamp(0, data.length, Math.floor(mousePos[0] / xScale.step()));
       xVal = data[xBand].Thing, //Finds Name of the band
-      yVal = clamp(0, yScale.domain()[1], Math.floor(yScale.invert(mousePos[1]))); //Finds scaled Y value
-    console.log(event, d) 
+      yVal = clamp(0, yScale.domain()[1], Math.floor(yScale.invert(mousePos[1]))); //CHECK HERE FOR HOW WE CAN HELP THE OVER SPENDING ISSUES!!!!!
+    //console.log(event, d) 
     //Halting Funciton and Checks
     if (getRemaining() > 0 || (getRemaining() <= 0 && yVal < data[xBand].elicit)) { //Check here for grainularrity changes to solving
       data.find((d) => d.Thing == xVal).elicit = yVal;
@@ -454,40 +419,72 @@ function pbUtilityBars(data) {
     //Nothing yet, just here as a placeholder
   }
 
-  // //Ranking drag functions:
-  // function rankStart(event, d) {
-  //   let xPos = d3.pointer(event, this)[0];
-  //   band = Math.floor(xPos / xScale.step()); //MAYBE CLAMP FOR THE EDGES
-  //   overwritePos(xDomain[band], xPos);
+  // These are the drag functions for Ranking Currently ther bars are not moving visually, even though they were before. 
+  function rankStart(event, d) {
+    let xPos = d3.pointer(event, this)[0];
+    band = Math.floor(xPos / xScale.step()); //MAYBE CLAMP FOR THE EDGES
+    overwritePos(xDomain[band], xPos);
 
-  //   console.log('start', posObj);
-  //   console.log(xDomain);
-  // }
-  // function dragRank(event, d) {
-  //   let xPos = d3.pointer(event, this)[0],
-  //     posDiff = xPos - posObj[refEdge][xDomain[band]];
-  //   refEdge =
-  //     posDiff > 0.1 // the reference edge is the point on the
-  //       ? 'left' // bar we need to make it past before reordering
-  //       : posDiff < -0.1
-  //       ? 'right'
-  //       : refEdge;
-  //   // console.log(refEdge);
-  //   overwritePos(xDomain[band], xPos);
-  //   xDomain.sort((a, b) => posObj[refEdge][a] - posObj[refEdge][b]);
-  //   xScale.domain(xDomain);
-  //   //console.log(xDomain)
-  //   chart.render();
-  // }
-  // function rankEnd(event, d) {
-  //   refEdge = 'center';
-  //   currentPos();
+    console.log('start', posObj);
+    console.log(xDomain);
+  }
+  function dragRank(event, d) {
+    let xPos = d3.pointer(event, this)[0],
+      posDiff = xPos - posObj[refEdge][xDomain[band]];
+    refEdge =
+      posDiff > 0.1 // the reference edge is the point on the
+        ? 'left' // bar we need to make it past before reordering
+        : posDiff < -0.1
+        ? 'right'
+        : refEdge;
+    // console.log(refEdge);
+    overwritePos(xDomain[band], xPos);
+    xDomain.sort((a, b) => posObj[refEdge][a] - posObj[refEdge][b]);
+    xScale.domain(xDomain);
+    //console.log(xDomain)
+    chart.render();
+  }
+  function rankEnd(event, d) {
+    refEdge = 'center';
+    currentPos();
 
-  //   console.log(xScale.domain());
-  //   console.log('end', posObj);
-  //   chart.render();
-  // }
+    console.log(xScale.domain());
+    console.log('end', posObj);
+    chart.render();
+  }
 
+
+
+//These are helper functions for the Drag events
+  function clamp(a, b, c) {
+    return Math.max(a, Math.min(b, c));
+  } //This clamp function is used to find the elicited value and assure it is in between bounds
+
+
+  // //Helpers for Budget remaining/ Halting
+  function sum(array) {
+    const arr = array;
+    const total = array.reduce((a, b) => a + b, 0);
+    return total;
+  }
+
+  function elicitArray() {
+    //grabs the elicit array value
+    var arr = [];
+    for (let i in [0, 1, 2, 3,4,5,6,7]) { //Wonder if this can be done programatically better
+      arr.push(data[i].elicit);
+    }
+    return arr;
+  }
+
+  function getRemaining() {
+    let remain = [yScale.domain()[1] - sum(elicitArray())];
+    return remain;
+  }
+
+
+
+//Visual help for dragging (Cursor needs some work when allocating (grab doesnt always look the best))
   function onMouse(event, d) {
     d3.select(this).attr('stroke', 'black').attr('cursor', 'grab');
   }
@@ -523,27 +520,6 @@ function pbUtilityBars(data) {
 
     return chart;
   };
-
-// console.log("This is the pathname", window.location.hash)
-
-// let currentPageLocation = window.location.hash
-
-// let testingVal = "#intro"
-// if (currentPageLocation == "#intro") {
-//     testingVal = "#util"
-// } else if (currentPageLocation == "#util") {
-//   testingVal = "#feedback"
-// }
-
-
-  function switchInstText(num) {
-    if (num == 1) {
-      text = "This is the First test (RANK)"
-    } else if (num == 2) {
-      text = "This is the Second Test (ALLOCATE)"  
-    };
-  }
-
 
   return chart;
 }
