@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import './page.css';
 
 // pages
 import intro from './pages/intro';
