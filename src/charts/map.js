@@ -14,8 +14,8 @@ export default function map() {
       margin: {top: 15, right: 30, bottom: 35, left: 40}
     },
     wardsSelected = [
-      {ward: '0', color: '#1e90ff'},
-      {ward: '0', color: '#008000'}
+      {ward: '0', color: '#7e62c4'},
+      {ward: '0', color: '#ed963c'}
     ];
 
   // constructor function

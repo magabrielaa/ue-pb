@@ -1,3 +1,349 @@
+body{
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin:0 auto;
+    font-size: 20px;
+    margin-left: 4em;
+    margin-right: 4em;
+}
+
+h1{
+    color:rgba(10, 10, 151, 0.809)
+}
+
+h2{
+    color:dodgerblue
+}
+
+.italic{
+    font-style: italic;
+    font-size: 16px;
+    color: rgba(10, 10, 151, 0.809);
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.center{
+    text-align: center;
+}
+
+#note{
+    color:rgba(10, 10, 151, 0.809);
+    font-weight: bold;
+}
+
+#language{
+    font-size: 20px;
+    text-align: right;
+}
+
+.blue{
+    color:dodgerblue
+}
+
+#voting{
+    border-style: inset;
+    border-color: rgba(10, 10, 151, 0.809);
+    width: fit-content;
+    padding: 0.3em;
+    text-align: center;
+    justify-content: center;
+    margin-left: 15%;
+}
+
+.button{
+    border-style: inset;
+    border-color: black;
+    width: 13%;
+    text-align: center;
+    background-color: greenyellow;
+    font-weight: bold;
+    padding: 0.3em;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    display: block;
+}
+
+#feedback-bubble{
+    border-style: inset;
+    border-color: black;
+    width: 65%;
+    text-align: left;
+    background-color: rgb(238, 250, 255);
+    padding: 0.5em;
+    padding-left: 1em;
+    border-radius: 15px;
+}
+
+#chart-option{
+    border-style: inset;
+    border-color: black;
+    width: 20%;
+    text-align: center;
+    background-color: rgb(238, 250, 255);
+    padding: 0.5em;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.modality{
+    font-size: 20px;
+    background-color: rgb(238, 250, 255);
+    border:0ch;
+    cursor: pointer;
+}
+
+.mode{
+    font-size: 20px;
+    background-color: rgb(238, 250, 255);
+    border:0ch;
+    cursor: pointer;
+}
+
+#feedback-bubble-map{
+    border-style: inset;
+    border-color: black;
+    width: 65%;
+    text-align: left;
+    background-color: rgb(238, 250, 255);
+    padding: 0.5em;
+    padding-left: 1em;
+    border-radius: 15px;
+}
+
+#rank{
+    flex-basis: 40%;
+}
+
+#allocate{
+    flex-basis: 50%;
+}
+
+#separator{
+    flex-basis: 10%;
+}
+
+#dropdown-1{
+    border-color: #7e62c4;
+    /* border-width: medium; */
+    border-width: 0.2em;
+    font-size: 20px;
+    padding: 0.2em;
+    border-radius: 10px;
+    width: 15%;
+    text-align: center;
+    box-shadow: 1px 8px 16px 0px rgba(79, 78, 78, 0.2);
+}
+
+#dropdown-2{
+    border-color: #ed963c;
+    border-width: 0.2em;
+    font-size: 20px;
+    padding: 0.2em;
+    border-radius: 10px;
+    width: 15%;
+    text-align: center;
+    box-shadow: 1px 8px 16px 0px rgba(79, 78, 79, 0.2);
+}
+
+
+#parent {
+    /* column-gap: 24PX; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    height: 800px;
+    width: 1900px;
+  }
+
+#map-container {
+    flex-basis: 30%;
+    flex-direction: column;
+  }
+
+#map-container svg {
+    width: 90%;
+    margin-top: 2em;
+  }
+
+#charts-container {
+    display: flex;
+    flex-basis: 70%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    margin-left: 2em;
+  }
+
+.ward-container{
+    gap: 20px;
+}
+
+#ward1{
+    display: flex;
+    flex-basis: 50%;
+    flex-direction: row;
+}
+
+#ward2{
+    display: flex;
+    flex-basis: 50%;
+    flex-direction: row;
+}
+
+.strip-chart{
+    flex-basis: 33%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height:100%;
+    margin-top: 1em;
+
+}
+
+.pb-table{
+    flex-basis: 33%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height:100%;
+    margin-top: 1em;
+
+}
+
+#map-container svg{
+    width: 100%;
+    height: 100%;
+}
+
+.ward-container {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+  }
+
+.x-label{
+    font-size: 16px;
+}
+
+.y-label{
+    font-size: 16px;
+}
+
+.x-ticks{
+    font-size: 16px;
+}
+
+.y-ticks{
+    font-size: 16px;
+}
+
+.bar-chart-1{
+    fill: dodgerblue;
+    opacity: 0.75;
+}
+
+.bar-chart-2{
+    fill: green;
+    opacity: 0.75;
+}
+
+.bar-sample{
+    fill: #ffa500;
+}
+
+#ward1-header{
+    color:dodgerblue;
+    text-align: center;
+    font-size:23px;
+    font-weight: bold;
+    margin:auto;
+    width:10%;
+    padding: 0.3em;
+    border-radius: 15px;
+    box-shadow: 1px 3px 3px #888888;
+}
+
+#ward2-header{
+    color:green;
+    text-align: center;
+    font-size:23px;
+    font-weight: bold;
+    margin:auto;
+    width:10%;
+    padding: 0.3em;
+    border-radius: 15px;
+    box-shadow: 1px 3px 3px #888888;
+}
+
+.chart-title{
+    fill:rgb(65, 64, 64);
+    font-weight:600;
+    font-size:30px;
+}
+
+.xaxis-lables{
+    font-size:18px;
+}
+
+.yaxis-lables{
+    font-size: 18px;
+}
+
+td, th {
+    padding: 1px 4px;
+  }
+
+th, td {
+    border: 0.5px solid black;
+  }
+
+.table {
+    padding: 0.5em;
+}
+
+.x-axis{
+    font-size: 16px;
+}
+
+
+.chart-title{
+    font-size: 46px;
+}
+
+.tick text{
+    fill: black;
+    font-size: 24px;
+}
+
+
+.strip-svg {
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 10px;
+}
+
+.canvas {
+    border-style: solid;
+    border-color: red;
+}
+
+.y-label{
+    font-weight: 700;
+}
+
+.x-label{
+    font-weight: 700;
+}
+
+
+
 svg {
     font: 10px sans-serif;
     border: 5px solid maroon;
