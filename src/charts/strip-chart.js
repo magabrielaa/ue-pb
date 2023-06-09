@@ -1,3 +1,4 @@
+import { ascending } from 'd3'
 import * as d3 from 'd3';
 /*
  * REUSABLE CHART COMPONENT
@@ -45,6 +46,9 @@ export default function stripChart() {
 
     // if we need to reshape the input data, do it here and store in a global variable
 
+    // Sort the data in alphabetical order of the xVar
+    data.sort((a, b) => ascending(a[xVar], b[xVar]));
+
     const ward1BorderColor = '#7e62c4'; // Color for ward 1
     const ward2BorderColor = '#ffa500'; // Color for ward 2
 
@@ -60,6 +64,7 @@ export default function stripChart() {
       svg.style('border-color', ward2BorderColor);
     }
 
+    // SCALES
     let xScale = d3
       .scaleBand()
       .domain(data.map((d) => d[xVar]))
@@ -96,7 +101,7 @@ export default function stripChart() {
         .attr("class", "x-ticks")
         .call(xAxis);
     
-    // Chart title
+    // CHART TITLE
     svg.append("text")
         .attr("x", layout.width/2 - 50)             
         .attr("y", -60)
@@ -127,7 +132,7 @@ export default function stripChart() {
           return xScale(d[xVar]) - line_length / 2 - xScale.bandwidth() / 2;
         })
         
-    // Y label
+    // Y LABEL
     svg.append("text")
       .attr("class", "y-label")
       .attr("text-anchor", "middle")
@@ -136,7 +141,7 @@ export default function stripChart() {
       .style("font-size", "28px")
       .text("Allocation ($)");
     
-    // X label
+    // X LABEL
     svg.append("text")
       .attr("class", "x-label")
       .attr("text-anchor", "middle")
